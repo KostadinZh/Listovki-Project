@@ -1,0 +1,62 @@
+@page
+@model QuizModel
+@{ ViewData["Title"] = "Quiz"; }
+
+<h1>Exam</h1>
+<p class="muted">@Model.QuestionCount questions &middot; @Model.TotalPoints points &middot; pass mark @Model.PassPoints</p>
+
+@if (Model.Submitted)
+{
+    <section class="card result @(Model.Passed ? "pass" : "fail")">
+        <h2>@(Model.Passed ? "Passed" : "Not passed")</h2>
+        <p><strong>@Model.PointsEarned</strong> / @Model.TotalPoints points (you needed @Model.PassPoints)</p>
+        <p>@Model.CorrectCount of @Model.QuestionCount questions answered correctly</p>
+        <p><a class="button" asp-page="Quiz">Take a new exam</a></p>
+    </section>
+}
+
+<form method="post">
+    @for (int n = 0; n < Model.Questions.Count; n++)
+    {
+        var q = Model.Questions[n];
+        var correctTotal = q.Answers.Count(a => a.IsCorrect);
+        var wasRight = Model.Submitted && Model.Results.GetValueOrDefault(q.Id);
+
+        <article class="card question @(Model.Submitted ? (wasRight ? "right" : "wrong") : "")">
+            <input type="hidden" name="QuestionIds" value="@q.Id" />
+            <div class="meta">Question @(n + 1) &middot; #@q.Id &middot; @q.Points pt &middot; choose @correctTotal</div>
+            <h3>@q.Text</h3>
+            <partial name="_QuestionMedia" model="q" />
+
+            <div class="options">
+                @for (int i = 0; i < q.Answers.Count; i++)
+                {
+                    var a = q.Answers[i];
+                    var img = q.AnswerImageUrl(i);
+                    var val = $"{q.Id}:{i}";
+                    var isPicked = Model.PickedMap.TryGetValue(q.Id, out var set) && set.Contains(i);
+                    var cls = "option";
+                    if (Model.Submitted)
+                    {
+                        if (a.IsCorrect) cls += " correct";
+                        else if (isPicked) cls += " incorrect";
+                    }
+                    <label class="@cls">
+                        <input type="checkbox" name="Picked" value="@val"
+                               checked="@isPicked" disabled="@Model.Submitted" />
+                        @if (img != null)
+                        {
+                            <img class="answer-img" src="@img" alt="Answer @(i + 1)" onerror="this.classList.add('missing')" />
+                        }
+                        <span>@a.Text</span>
+                    </label>
+                }
+            </div>
+        </article>
+    }
+
+    @if (!Model.Submitted)
+    {
+        <button type="submit">Check answers</button>
+    }
+</form>

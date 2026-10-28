@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The Web SDK already includes Data\questions.json as Content; just make sure it is copied to the output folder -->
+    <Content Update="Data\questions.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

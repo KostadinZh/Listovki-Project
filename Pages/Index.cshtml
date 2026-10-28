@@ -1,0 +1,17 @@
+@page
+@model IndexModel
+@{ ViewData["Title"] = "Home"; }
+
+<h1>Listovki Quiz</h1>
+
+<section class="card">
+    <h2>The exam</h2>
+    <ul>
+        <li><strong>@Model.QuestionCount</strong> questions, drawn at random from all topics</li>
+        <li>Worth <strong>@Model.TotalPoints</strong> points in total</li>
+        <li>You need at least <strong>@Model.PassPoints</strong> points to pass</li>
+        <li>Each question must be answered completely correctly to earn its points</li>
+    </ul>
+    <p><a class="button" asp-page="Quiz">Start exam</a></p>
+    <p class="muted">Question bank: @Model.PoolSize questions.</p>
+</section>

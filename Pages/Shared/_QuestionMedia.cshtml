@@ -1,0 +1,11 @@
+@model Question
+
+@if (Model.QuestionImages.Count > 0)
+{
+    <div class="media">
+        @foreach (var r in Model.QuestionImages)
+        {
+            <img src="@Question.AssetUrl(r)" alt="Picture for question @Model.Id" onerror="this.classList.add('missing')" />
+        }
+    </div>
+}
