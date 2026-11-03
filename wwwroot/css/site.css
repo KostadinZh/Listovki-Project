@@ -219,3 +219,69 @@ img.missing { min-width: 120px; min-height: 60px; padding: .4rem; border: 2px da
   .steps { grid-template-columns: 1fr; }
   .question { padding: 1rem; }
 }
+
+/* =========================================================
+   Accounts: header navigation, forms, history table
+   ========================================================= */
+
+/* ---------- Header navigation ---------- */
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.nav { display: flex; align-items: center; gap: 1rem; }
+.nav a:not(.button) { color: var(--text); text-decoration: none; font-weight: 500; }
+.nav a:not(.button):hover { color: var(--primary); }
+.nav-user { background: var(--primary-soft); color: var(--primary); font-weight: 600; font-size: .9rem; padding: .2rem .8rem; border-radius: 99px; }
+.inline-form { margin: 0; }
+.link-button { background: none; border: 0; padding: 0; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer; }
+.link-button:hover { color: var(--bad); }
+
+/* ---------- More button styles ---------- */
+.button.small { font-size: .9rem; padding: .45rem 1rem; box-shadow: none; }
+.button.full { width: 100%; text-align: center; }
+.button.secondary { background: #fff; color: var(--primary); box-shadow: none; border: 2px solid var(--primary-soft); }
+.button.secondary:hover { background: var(--primary-soft); }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+.hero-note { margin: 1rem 0 0; }
+
+/* ---------- Login and register ---------- */
+.auth-card {
+  max-width: 420px; margin: 1.5rem auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  box-shadow: var(--shadow); padding: 2rem 1.8rem;
+}
+.auth-card h1 { font-size: 1.6rem; }
+.field { display: block; margin-bottom: 1rem; }
+.field span { display: block; font-size: .9rem; font-weight: 600; margin-bottom: .3rem; }
+.field input {
+  width: 100%; padding: .7rem .9rem; font: inherit; color: var(--text);
+  background: #fff; border: 2px solid var(--line); border-radius: 12px;
+}
+.field input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
+.check { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.2rem; font-size: .95rem; cursor: pointer; }
+.check input { width: 1.1rem; height: 1.1rem; accent-color: var(--primary); }
+.form-error {
+  background: var(--bad-soft); color: var(--bad); font-weight: 600;
+  padding: .7rem 1rem; border-radius: 12px; margin: 0 0 1rem;
+}
+
+/* ---------- My attempts ---------- */
+.stats-4 { grid-template-columns: repeat(4, 1fr); }
+.empty { text-align: center; }
+
+.table-wrap { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: .5rem 1.2rem; overflow-x: auto; margin-bottom: 1.5rem; }
+.attempts { width: 100%; border-collapse: collapse; }
+.attempts th { text-align: left; font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: .8rem .5rem; border-bottom: 2px solid var(--line); }
+.attempts td { padding: .8rem .5rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.attempts tr:last-child td { border-bottom: 0; }
+
+.mini-bar { width: 140px; max-width: 100%; height: 6px; background: var(--line); border-radius: 99px; margin-top: .35rem; overflow: hidden; }
+.mini-fill { height: 100%; background: var(--primary); border-radius: 99px; }
+
+.tag { display: inline-block; font-size: .85rem; font-weight: 700; padding: .15rem .8rem; border-radius: 99px; }
+.tag-pass { background: var(--good-soft); color: var(--good); }
+.tag-fail { background: var(--bad-soft); color: var(--bad); }
+
+@media (max-width: 600px) {
+  .stats-4 { grid-template-columns: repeat(2, 1fr); }
+  .auth-card { padding: 1.5rem 1.2rem; }
+}

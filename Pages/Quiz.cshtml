@@ -35,7 +35,9 @@
             <p class="review-title">Perfect score - no mistakes!</p>
         }
 
+        <p class="muted">This attempt was saved to your account.</p>
         <a class="button" asp-page="Quiz">Take a new exam</a>
+        <a class="button secondary" asp-page="History">My attempts</a>
     </section>
 }
 else
@@ -47,6 +49,7 @@ else
 }
 
 <form method="post" id="exam-form" class="@(Model.Submitted ? "finished" : "open")">
+    <input type="hidden" name="ExamCode" value="@Model.ExamCode" />
     @for (int n = 0; n < Model.Questions.Count; n++)
     {
         var question = Model.Questions[n];

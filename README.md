@@ -12,6 +12,13 @@ Then open http://localhost:5000
 - Questions with a video are never used
 - A question gives its points only if exactly the correct answers are ticked
 
+## Accounts
+- People register with a username and password, then log in (`/Register`, `/Login`)
+- The exam needs a login. Every finished exam is saved and listed on `/History` ("My attempts")
+- Passwords are never stored - only a salted PBKDF2 hash (`Services/Passwords.cs`)
+- Users and attempts are saved in `App_Data/users.json` and `App_Data/attempts.json`.
+  Keep `App_Data/` out of git (add the line `App_Data/` to `.gitignore`).
+
 ## What each file does
 | File | Job |
 |------|-----|
@@ -23,6 +30,12 @@ Then open http://localhost:5000
 | `Pages/Index.cshtml` | Home page |
 | `Pages/Quiz.cshtml` | The exam page (questions, then the result) |
 | `Pages/Quiz.cshtml.cs` | Builds the exam and grades the answers |
+| `Models/AppUser.cs`, `Models/Attempt.cs` | A user, and the result of one exam |
+| `Services/Passwords.cs` | Hashes and checks passwords |
+| `Services/UserStore.cs` | Saves/loads users and attempts (JSON files) |
+| `Services/AuthHelper.cs` | Gives the browser the login cookie |
+| `Pages/Register`, `Login`, `Logout` | Account pages |
+| `Pages/History.cshtml` | The list of past attempts and statistics |
 | `Pages/Shared/_Layout.cshtml` | Header and footer around every page |
 | `wwwroot/css/site.css` | All colours and styling |
 

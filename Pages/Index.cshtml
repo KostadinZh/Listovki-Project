@@ -9,7 +9,22 @@
         Take a full practice exam with questions from every topic. When you finish,
         you see your score and exactly which answers were right.
     </p>
-    <a class="button big" asp-page="Quiz">Start the exam</a>
+    <div class="hero-actions">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a class="button big" asp-page="Quiz">Start the exam</a>
+            <a class="button big secondary" asp-page="History">My attempts</a>
+        }
+        else
+        {
+            <a class="button big" asp-page="Register">Create an account</a>
+            <a class="button big secondary" asp-page="Login">Log in</a>
+        }
+    </div>
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <p class="muted hero-note">You need an account so your attempts can be saved.</p>
+    }
 </section>
 
 <section class="stats">

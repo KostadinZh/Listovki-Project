@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Listovki Quiz</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     <header class="site-header">
@@ -14,6 +14,22 @@
                 <span class="logo-mark">B</span>
                 <span class="logo-text">Listovki Quiz</span>
             </a>
+
+            <nav class="nav">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-page="/History">My attempts</a>
+                    <span class="nav-user">@(User.Identity?.Name)</span>
+                    <form method="post" asp-page="/Logout" class="inline-form">
+                        <button type="submit" class="link-button">Log out</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-page="/Login">Log in</a>
+                    <a class="button small" asp-page="/Register">Register</a>
+                }
+            </nav>
         </div>
     </header>
 

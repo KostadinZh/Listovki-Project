@@ -1,0 +1,31 @@
+@page
+@model RegisterModel
+@{ ViewData["Title"] = "Register"; }
+
+<section class="auth-card">
+    <h1>Create an account</h1>
+    <p class="muted">Your exam attempts are saved to your account.</p>
+
+    @if (Model.Error != null)
+    {
+        <p class="form-error">@Model.Error</p>
+    }
+
+    <form method="post">
+        <label class="field">
+            <span>Username</span>
+            <input type="text" name="Username" value="@Model.Username" autocomplete="username" required />
+        </label>
+        <label class="field">
+            <span>Password</span>
+            <input type="password" name="Password" autocomplete="new-password" required />
+        </label>
+        <label class="field">
+            <span>Repeat the password</span>
+            <input type="password" name="ConfirmPassword" autocomplete="new-password" required />
+        </label>
+        <button type="submit" class="button big full">Register</button>
+    </form>
+
+    <p class="muted center">Already have an account? <a asp-page="Login">Log in</a></p>
+</section>

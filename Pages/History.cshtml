@@ -1,0 +1,65 @@
+@page
+@model HistoryModel
+@{ ViewData["Title"] = "My attempts"; }
+
+<h1>My attempts</h1>
+
+@if (Model.Attempts.Count == 0)
+{
+    <section class="card empty">
+        <p>You have not taken an exam yet.</p>
+        <a class="button" asp-page="Quiz">Take your first exam</a>
+    </section>
+}
+else
+{
+    <section class="stats stats-4">
+        <div class="stat">
+            <span class="stat-number">@Model.Attempts.Count</span>
+            <span class="stat-label">attempts</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">@Model.BestPoints</span>
+            <span class="stat-label">best score</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">@Model.AveragePoints</span>
+            <span class="stat-label">average score</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">@Model.PassedCount</span>
+            <span class="stat-label">passed</span>
+        </div>
+    </section>
+
+    <div class="table-wrap">
+        <table class="attempts">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Points</th>
+                    <th>Correct</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var attempt in Model.Attempts)
+                {
+                    <tr>
+                        <td>@(attempt.TakenAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</td>
+                        <td>
+                            <strong>@attempt.Points</strong> / @ExamRules.TotalPoints
+                            <div class="mini-bar"><div class="mini-fill" style="width: @(attempt.Points * 100 / ExamRules.TotalPoints)%"></div></div>
+                        </td>
+                        <td>@attempt.CorrectCount / @ExamRules.QuestionCount</td>
+                        <td>
+                            <span class="tag @(attempt.Passed ? "tag-pass" : "tag-fail")">@(attempt.Passed ? "Passed" : "Failed")</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <p class="center"><a class="button" asp-page="Quiz">Take another exam</a></p>
+}

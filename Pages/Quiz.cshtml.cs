@@ -1,23 +1,32 @@
+using System.Security.Claims;
 using ListovkiQuiz.Models;
 using ListovkiQuiz.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ListovkiQuiz.Pages;
 
+[Authorize]   // only logged-in people can take the exam
 public class QuizModel : PageModel
 {
     private readonly QuestionRepository _repo;
+    private readonly UserStore _store;
 
-    public QuizModel(QuestionRepository repo)
+    public QuizModel(QuestionRepository repo, UserStore store)
     {
         _repo = repo;
+        _store = store;
     }
 
     // The ids of the questions in this exam. The page sends them back (as hidden fields)
     // when the form is submitted, so we know which questions to grade.
     [BindProperty]
     public List<int> Ids { get; set; } = new List<int>();
+
+    // A unique code for this exam (see Attempt.ExamCode). Sent back with the form too.
+    [BindProperty]
+    public string? ExamCode { get; set; }
 
     public List<Question> Questions { get; set; } = new List<Question>();
 
@@ -37,6 +46,7 @@ public class QuizModel : PageModel
     public void OnGet()
     {
         Questions = _repo.BuildExam();
+        ExamCode = Guid.NewGuid().ToString();
     }
 
     // Pressing the "Finish" button: grade the exam
@@ -77,6 +87,24 @@ public class QuizModel : PageModel
             }
         }
 
+        SaveAttempt();
         return Page();
+    }
+
+    // Remembers this result in the logged-in user's history
+    private void SaveAttempt()
+    {
+        // The login cookie holds the user's id
+        int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId);
+
+        _store.AddAttempt(new Attempt
+        {
+            UserId = userId,
+            TakenAt = DateTime.UtcNow,
+            Points = PointsEarned,
+            CorrectCount = CorrectCount,
+            Passed = Passed,
+            ExamCode = ExamCode ?? ""
+        });
     }
 }

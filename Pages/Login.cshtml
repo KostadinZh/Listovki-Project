@@ -1,0 +1,32 @@
+@page
+@model LoginModel
+@{ ViewData["Title"] = "Log in"; }
+
+<section class="auth-card">
+    <h1>Log in</h1>
+    <p class="muted">Log in to take the exam and see your past attempts.</p>
+
+    @if (Model.Error != null)
+    {
+        <p class="form-error">@Model.Error</p>
+    }
+
+    <form method="post">
+        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+        <label class="field">
+            <span>Username</span>
+            <input type="text" name="Username" value="@Model.Username" autocomplete="username" required />
+        </label>
+        <label class="field">
+            <span>Password</span>
+            <input type="password" name="Password" autocomplete="current-password" required />
+        </label>
+        <label class="check">
+            <input type="checkbox" name="RememberMe" value="true" checked />
+            <span>Keep me logged in for 14 days</span>
+        </label>
+        <button type="submit" class="button big full">Log in</button>
+    </form>
+
+    <p class="muted center">No account yet? <a asp-page="Register">Register</a></p>
+</section>
