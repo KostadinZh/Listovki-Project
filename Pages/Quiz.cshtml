@@ -1,54 +1,123 @@
 @page
 @model QuizModel
-@{ ViewData["Title"] = "Quiz"; }
-
-<h1>Exam</h1>
-<p class="muted">@Model.QuestionCount questions &middot; @Model.TotalPoints points &middot; pass mark @Model.PassPoints</p>
+@{ ViewData["Title"] = Model.Submitted ? "Results" : "Exam"; }
 
 @if (Model.Submitted)
 {
-    <section class="card result @(Model.Passed ? "pass" : "fail")">
-        <h2>@(Model.Passed ? "Passed" : "Not passed")</h2>
-        <p><strong>@Model.PointsEarned</strong> / @Model.TotalPoints points (you needed @Model.PassPoints)</p>
-        <p>@Model.CorrectCount of @Model.QuestionCount questions answered correctly</p>
-        <p><a class="button" asp-page="Quiz">Take a new exam</a></p>
+    <section class="result @(Model.Passed ? "pass" : "fail")">
+        <span class="result-badge">@(Model.Passed ? "Passed" : "Not passed")</span>
+
+        <p class="score">
+            <span class="score-number">@Model.PointsEarned</span>
+            <span class="score-total">/ @ExamRules.TotalPoints points</span>
+        </p>
+
+        <div class="meter">
+            <div class="meter-fill" style="width: @(Model.ScorePercent)%"></div>
+            <div class="meter-mark" style="left: @(Model.PassPercent)%"></div>
+        </div>
+        <p class="muted">The line marks the pass mark: @ExamRules.PassPoints points.</p>
+
+        <p>@Model.CorrectCount of @ExamRules.QuestionCount questions were answered correctly.</p>
+
+        @if (Model.WrongNumbers.Count > 0)
+        {
+            <p class="review-title">Questions to review:</p>
+            <div class="chips">
+                @foreach (var number in Model.WrongNumbers)
+                {
+                    <a class="chip" href="#question-@number">@number</a>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="review-title">Perfect score - no mistakes!</p>
+        }
+
+        <a class="button" asp-page="Quiz">Take a new exam</a>
     </section>
 }
+else
+{
+    <div class="progress-wrap">
+        <p class="progress-text"><strong id="answered">0</strong> of @ExamRules.QuestionCount questions answered</p>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+}
 
-<form method="post">
+<form method="post" id="exam-form" class="@(Model.Submitted ? "finished" : "open")">
     @for (int n = 0; n < Model.Questions.Count; n++)
     {
-        var q = Model.Questions[n];
-        var correctTotal = q.Answers.Count(a => a.IsCorrect);
-        var wasRight = Model.Submitted && Model.Results.GetValueOrDefault(q.Id);
+        var question = Model.Questions[n];
+        var correctCount = question.Answers.Count(a => a.IsCorrect);
+        var picked = Model.Submitted ? Model.Picked[question.Id] : new List<int>();
+        var fieldName = "q" + question.Id;
 
-        <article class="card question @(Model.Submitted ? (wasRight ? "right" : "wrong") : "")">
-            <input type="hidden" name="QuestionIds" value="@q.Id" />
-            <div class="meta">Question @(n + 1) &middot; #@q.Id &middot; @q.Points pt &middot; choose @correctTotal</div>
-            <h3>@q.Text</h3>
-            <partial name="_QuestionMedia" model="q" />
+        var state = "";
+        if (Model.Submitted)
+        {
+            state = Model.IsRight[question.Id] ? "right" : "wrong";
+        }
 
-            <div class="options">
-                @for (int i = 0; i < q.Answers.Count; i++)
+        var optionsClass = question.HasImageAnswers ? "options picture-options" : "options";
+
+        <article class="question @state" id="question-@(n + 1)" data-question>
+            <input type="hidden" name="Ids" value="@question.Id" />
+
+            <div class="q-head">
+                <span class="q-number">@(n + 1)</span>
+                <span class="pill">@question.SectionLabel</span>
+                <span class="pill pill-points">@question.Points @(question.Points == 1 ? "point" : "points")</span>
+                @if (Model.Submitted)
                 {
-                    var a = q.Answers[i];
-                    var img = q.AnswerImageUrl(i);
-                    var val = $"{q.Id}:{i}";
-                    var isPicked = Model.PickedMap.TryGetValue(q.Id, out var set) && set.Contains(i);
-                    var cls = "option";
-                    if (Model.Submitted)
+                    <span class="verdict">@(Model.IsRight[question.Id] ? "Correct" : "Wrong")</span>
+                }
+            </div>
+
+            <h3 class="q-text">@question.Text</h3>
+
+            @foreach (var image in question.QuestionImages)
+            {
+                <img class="q-image" src="@Question.AssetUrl(image)" alt="Picture for question @(n + 1)" onerror="this.classList.add('missing')" />
+            }
+
+            <p class="hint">Select @correctCount correct @(correctCount == 1 ? "answer" : "answers")</p>
+
+            <div class="@optionsClass">
+                @for (int i = 0; i < question.Answers.Count; i++)
+                {
+                    var answer = question.Answers[i];
+                    var imageUrl = question.AnswerImageUrl(i);
+                    var isPicked = picked.Contains(i);
+
+                    // After the exam, colour the answers: green = correct, red = ticked but wrong
+                    var optionClass = "option";
+                    if (Model.Submitted && answer.IsCorrect)
                     {
-                        if (a.IsCorrect) cls += " correct";
-                        else if (isPicked) cls += " incorrect";
+                        optionClass += " correct";
                     }
-                    <label class="@cls">
-                        <input type="checkbox" name="Picked" value="@val"
-                               checked="@isPicked" disabled="@Model.Submitted" />
-                        @if (img != null)
-                        {
-                            <img class="answer-img" src="@img" alt="Answer @(i + 1)" onerror="this.classList.add('missing')" />
-                        }
-                        <span>@a.Text</span>
+                    if (Model.Submitted && !answer.IsCorrect && isPicked)
+                    {
+                        optionClass += " incorrect";
+                    }
+                    if (Model.Submitted && isPicked)
+                    {
+                        optionClass += " picked";
+                    }
+
+                    <label class="@optionClass">
+                        <input type="checkbox" name="@fieldName" value="@i" checked="@isPicked" disabled="@Model.Submitted" />
+                        <span class="option-body">
+                            @if (imageUrl != null)
+                            {
+                                <img class="answer-image" src="@imageUrl" alt="Answer @(i + 1)" onerror="this.classList.add('missing')" />
+                            }
+                            @if (!string.IsNullOrWhiteSpace(answer.Text))
+                            {
+                                <span class="answer-text">@answer.Text</span>
+                            }
+                        </span>
                     </label>
                 }
             </div>
@@ -57,6 +126,30 @@
 
     @if (!Model.Submitted)
     {
-        <button type="submit">Check answers</button>
+        <div class="submit-row">
+            <button type="submit" class="button big">Finish and check my answers</button>
+        </div>
     }
 </form>
+
+@if (!Model.Submitted)
+{
+    <script>
+        // Counts the questions that have at least one ticked answer and moves the progress bar.
+        var questions = document.querySelectorAll('[data-question]');
+
+        function updateProgress() {
+            var done = 0;
+            for (var i = 0; i < questions.length; i++) {
+                if (questions[i].querySelector('input:checked')) {
+                    done++;
+                }
+            }
+            document.getElementById('answered').textContent = done;
+            document.getElementById('progress-fill').style.width = (done * 100 / questions.length) + '%';
+        }
+
+        document.getElementById('exam-form').addEventListener('change', updateProgress);
+        updateProgress();
+    </script>
+}

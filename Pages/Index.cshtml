@@ -2,16 +2,49 @@
 @model IndexModel
 @{ ViewData["Title"] = "Home"; }
 
-<h1>Listovki Quiz</h1>
-
-<section class="card">
-    <h2>The exam</h2>
-    <ul>
-        <li><strong>@Model.QuestionCount</strong> questions, drawn at random from all topics</li>
-        <li>Worth <strong>@Model.TotalPoints</strong> points in total</li>
-        <li>You need at least <strong>@Model.PassPoints</strong> points to pass</li>
-        <li>Each question must be answered completely correctly to earn its points</li>
-    </ul>
-    <p><a class="button" asp-page="Quiz">Start exam</a></p>
-    <p class="muted">Question bank: @Model.PoolSize questions.</p>
+<section class="hero">
+    <p class="eyebrow">Category B &middot; theory exam</p>
+    <h1>Pass your driving theory exam with confidence</h1>
+    <p class="lead">
+        Take a full practice exam with questions from every topic. When you finish,
+        you see your score and exactly which answers were right.
+    </p>
+    <a class="button big" asp-page="Quiz">Start the exam</a>
 </section>
+
+<section class="stats">
+    <div class="stat">
+        <span class="stat-number">@ExamRules.QuestionCount</span>
+        <span class="stat-label">questions</span>
+    </div>
+    <div class="stat">
+        <span class="stat-number">@ExamRules.TotalPoints</span>
+        <span class="stat-label">points in total</span>
+    </div>
+    <div class="stat">
+        <span class="stat-number">@ExamRules.PassPoints</span>
+        <span class="stat-label">points to pass</span>
+    </div>
+</section>
+
+<h2 class="section-title">How it works</h2>
+<section class="steps">
+    <div class="step">
+        <span class="step-number">1</span>
+        <p>You get @ExamRules.QuestionCount random questions from all topics.</p>
+    </div>
+    <div class="step">
+        <span class="step-number">2</span>
+        <p>Some questions have more than one correct answer. Tick all of them.</p>
+    </div>
+    <div class="step">
+        <span class="step-number">3</span>
+        <p>A question gives its points only if your answers are exactly right.</p>
+    </div>
+    <div class="step">
+        <span class="step-number">4</span>
+        <p>Collect at least @ExamRules.PassPoints of @ExamRules.TotalPoints points to pass.</p>
+    </div>
+</section>
+
+<p class="muted center">Question bank: @Model.PoolSize questions.</p>

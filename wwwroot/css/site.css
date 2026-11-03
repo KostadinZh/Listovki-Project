@@ -1,42 +1,221 @@
-:root { --bg:#f5f6f8; --card:#fff; --text:#1d2330; --muted:#6b7280; --accent:#0060aa;
-        --ok:#1b8a3a; --ok-bg:#e6f6ea; --bad:#b42318; --bad-bg:#fdecea; --line:#e2e5ea; }
-@media (prefers-color-scheme: dark) {
-  :root { --bg:#14171c; --card:#1d222a; --text:#e8eaee; --muted:#9aa3b2; --accent:#5aa9ee;
-          --ok:#4cc26b; --ok-bg:#16301f; --bad:#f2837a; --bad-bg:#3a1c1a; --line:#2c333d; }
+/* =========================================================
+   Colours - a calm, modern palette
+   blue = main colour, orange = small highlights,
+   green = correct, red = wrong
+   ========================================================= */
+:root {
+  --primary: #3b5bdb;
+  --primary-dark: #2f4ac0;
+  --primary-soft: #edf2ff;
+  --accent: #ff922b;
+  --accent-soft: #fff4e6;
+  --accent-text: #b55800;
+
+  --text: #1e293b;
+  --muted: #64748b;
+  --background: #f6f8fc;
+  --card: #ffffff;
+  --line: #e2e8f0;
+
+  --good: #0f9d70;
+  --good-soft: #e6f8f1;
+  --bad: #e03131;
+  --bad-soft: #ffeded;
+
+  --shadow: 0 2px 12px rgba(30, 41, 59, 0.07);
 }
-* { box-sizing:border-box; }
-body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
-header { background:var(--accent); }
-nav { max-width:900px; margin:0 auto; padding:.75rem 1rem; display:flex; gap:1.25rem; flex-wrap:wrap; }
-nav a { color:#fff; text-decoration:none; }
-nav a.brand { font-weight:700; margin-right:auto; }
-main { max-width:900px; margin:0 auto; padding:1rem; }
-a { color:var(--accent); }
-.muted, .meta { color:var(--muted); font-size:.9rem; }
-.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1rem 1.25rem; margin:1rem 0; }
-.question h3 { margin:.25rem 0 .75rem; font-size:1.05rem; }
-.question.right { border-left:5px solid var(--ok); }
-.question.wrong { border-left:5px solid var(--bad); }
-.options { display:flex; flex-direction:column; gap:.5rem; }
-.option { display:flex; align-items:flex-start; gap:.6rem; padding:.55rem .75rem; border:1px solid var(--line); border-radius:8px; cursor:pointer; }
-.option:hover { border-color:var(--accent); }
-.option.correct { background:var(--ok-bg); border-color:var(--ok); }
-.option.incorrect { background:var(--bad-bg); border-color:var(--bad); }
-.answers { padding-left:1.2rem; }
-.answers li.correct { color:var(--ok); font-weight:600; }
-.tick { margin-left:.3rem; }
-.media { margin:.5rem 0 1rem; }
-.media img { max-width:100%; max-height:260px; background:#fff; border-radius:6px; border:1px solid var(--line); }
-.media video { max-width:100%; max-height:300px; }
-.answer-img { max-height:110px; max-width:160px; background:#fff; border-radius:4px; vertical-align:middle; }
-img.missing { min-width:110px; min-height:50px; border:1px dashed var(--muted); padding:.25rem; font-size:.75rem; color:var(--muted); }
-form label { display:inline-flex; flex-direction:column; gap:.25rem; margin-right:1rem; font-size:.9rem; }
-.filters { display:flex; gap:.5rem; flex-wrap:wrap; }
-.filters input[type=search] { flex:1; min-width:200px; }
-select, input[type=number], input[type=search] { padding:.45rem .6rem; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--text); font:inherit; }
-button, .button { background:var(--accent); color:#fff; border:0; border-radius:6px; padding:.55rem 1.1rem; font:inherit; cursor:pointer; text-decoration:none; display:inline-block; }
-.result { border-left:5px solid var(--accent); }
-.result.pass { border-left-color:var(--ok); }
-.result.fail { border-left-color:var(--bad); }
-.pager { display:flex; gap:1rem; justify-content:center; margin:1.5rem 0; }
-code { background:var(--line); padding:.1rem .35rem; border-radius:4px; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--background);
+}
+
+main { flex: 1; padding-top: 1.5rem; padding-bottom: 3rem; }
+.container { width: 100%; max-width: 820px; margin: 0 auto; padding: 0 1rem; }
+
+h1, h2, h3 { margin: 0 0 .5rem; line-height: 1.25; }
+a { color: var(--primary); }
+.muted { color: var(--muted); font-size: .9rem; }
+.center { text-align: center; }
+
+/* ---------- Header and footer ---------- */
+.site-header { background: var(--card); border-bottom: 1px solid var(--line); }
+.header-inner { padding-top: .8rem; padding-bottom: .8rem; }
+.logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--text); }
+.logo-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.2rem; height: 2.2rem; border-radius: 10px;
+  background: var(--primary); color: #fff; font-weight: 800;
+}
+.logo-text { font-weight: 700; font-size: 1.1rem; }
+.site-footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 1.5rem 0; }
+
+/* ---------- Buttons ---------- */
+.button {
+  display: inline-block; border: 0; cursor: pointer; text-decoration: none;
+  background: var(--primary); color: #fff;
+  font: inherit; font-weight: 600;
+  padding: .7rem 1.4rem; border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(59, 91, 219, 0.3);
+}
+.button:hover { background: var(--primary-dark); }
+.button.big { font-size: 1.1rem; padding: .9rem 1.9rem; }
+
+/* ---------- Home page ---------- */
+.hero {
+  background: linear-gradient(135deg, var(--primary-soft), #ffffff);
+  border: 1px solid var(--line); border-radius: 20px;
+  padding: 2.6rem 2.2rem; box-shadow: var(--shadow);
+}
+.hero h1 { font-size: 2.2rem; max-width: 560px; }
+.eyebrow { margin: 0 0 .6rem; color: var(--accent-text); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: .8rem; }
+.lead { max-width: 540px; font-size: 1.1rem; color: var(--muted); margin: 0 0 1.6rem; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.2rem 0; }
+.stat {
+  background: var(--card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 1.2rem 1rem; text-align: center; border-top: 4px solid var(--accent);
+}
+.stat-number { display: block; font-size: 2.3rem; font-weight: 800; color: var(--primary); line-height: 1.1; }
+.stat-label { color: var(--muted); font-size: .9rem; }
+
+.section-title { margin: 2rem 0 .8rem; font-size: 1.3rem; }
+.steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.step {
+  display: flex; align-items: flex-start; gap: .9rem;
+  background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 1.1rem 1.2rem;
+}
+.step p { margin: 0; }
+.step-number {
+  flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); color: var(--accent-text); font-weight: 700;
+}
+
+/* ---------- Progress bar (stays at the top while scrolling) ---------- */
+.progress-wrap { position: sticky; top: 0; z-index: 10; background: var(--background); padding: .7rem 0 .9rem; }
+.progress-text { margin: 0 0 .4rem; font-size: .9rem; color: var(--muted); }
+.progress-text strong { color: var(--text); }
+.progress-track { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: var(--primary); border-radius: 99px; transition: width .25s; }
+
+/* ---------- Questions ---------- */
+.question {
+  background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--line);
+  border-radius: 16px; box-shadow: var(--shadow);
+  padding: 1.2rem 1.4rem; margin: 1rem 0;
+}
+.question.right { border-left-color: var(--good); }
+.question.wrong { border-left-color: var(--bad); }
+
+.q-head { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin-bottom: .7rem; }
+.q-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2rem; height: 2rem; padding: 0 .5rem; border-radius: 99px;
+  background: var(--text); color: #fff; font-weight: 700; font-size: .9rem;
+}
+.pill { background: var(--primary-soft); color: var(--primary); font-size: .8rem; font-weight: 600; padding: .15rem .7rem; border-radius: 99px; }
+.pill-points { background: var(--accent-soft); color: var(--accent-text); }
+.verdict { margin-left: auto; font-weight: 700; }
+.right .verdict { color: var(--good); }
+.wrong .verdict { color: var(--bad); }
+
+.q-text { font-size: 1.1rem; margin-bottom: .8rem; }
+.hint { margin: 0 0 .7rem; font-size: .85rem; color: var(--muted); }
+
+.q-image {
+  display: block; max-width: 100%; max-height: 300px; margin: 0 0 .8rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+}
+
+/* ---------- Answer options ----------
+   Each option is a <label> holding a hidden checkbox and a box (.option-body).
+   The little square in front of the text is drawn with ::before. */
+.options { display: flex; flex-direction: column; gap: .6rem; }
+.picture-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+.option { display: block; position: relative; cursor: pointer; }
+.option input { position: absolute; opacity: 0; }
+
+.option-body {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .8rem 1rem; background: #fff;
+  border: 2px solid var(--line); border-radius: 12px;
+}
+.option-body::before {
+  content: ""; flex-shrink: 0;
+  width: 1.4rem; height: 1.4rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--muted); border-radius: 6px;
+  color: #fff; font-size: .9rem; font-weight: 700;
+}
+.option:hover .option-body { border-color: var(--primary); }
+.option input:focus-visible + .option-body { outline: 3px solid var(--primary-soft); border-color: var(--primary); }
+
+/* While taking the exam: a ticked answer turns blue */
+.open .option input:checked + .option-body { border-color: var(--primary); background: var(--primary-soft); }
+.open .option input:checked + .option-body::before { content: "\2713"; background: var(--primary); border-color: var(--primary); }
+
+/* After the exam: correct answers are green, wrong ticks are red */
+.finished .option { cursor: default; }
+.finished .option:hover .option-body { border-color: var(--line); }
+.finished .option.correct .option-body { border-color: var(--good); background: var(--good-soft); }
+.finished .option.incorrect .option-body { border-color: var(--bad); background: var(--bad-soft); }
+.finished .option.correct.picked .option-body::before { content: "\2713"; background: var(--good); border-color: var(--good); }
+.finished .option.incorrect .option-body::before { content: "\2715"; background: var(--bad); border-color: var(--bad); }
+.finished .option.correct:not(.picked) .option-body::before { border-color: var(--good); }
+
+.answer-image { max-width: 100%; max-height: 120px; background: #fff; border-radius: 8px; }
+
+/* Shown instead of a picture when the picture file is missing */
+img.missing { min-width: 120px; min-height: 60px; padding: .4rem; border: 2px dashed var(--muted); font-size: .8rem; color: var(--muted); }
+
+.submit-row { text-align: center; margin-top: 1.6rem; }
+
+/* ---------- Result ---------- */
+.result {
+  background: var(--card); border-radius: 20px; box-shadow: var(--shadow);
+  padding: 1.8rem; text-align: center; border-top: 8px solid var(--primary);
+}
+.result.pass { border-top-color: var(--good); }
+.result.fail { border-top-color: var(--bad); }
+.result-badge { display: inline-block; font-weight: 800; padding: .3rem 1.2rem; border-radius: 99px; color: #fff; background: var(--primary); }
+.pass .result-badge { background: var(--good); }
+.fail .result-badge { background: var(--bad); }
+
+.score { margin: .8rem 0 1rem; }
+.score-number { font-size: 3.8rem; font-weight: 800; line-height: 1; }
+.score-total { font-size: 1.2rem; color: var(--muted); margin-left: .4rem; }
+
+/* The bar is as long as your score. The dark line is the pass mark. */
+.meter { position: relative; height: 14px; background: var(--line); border-radius: 99px; margin: 0 auto .5rem; max-width: 480px; }
+.meter-fill { height: 100%; background: var(--primary); border-radius: 99px; }
+.pass .meter-fill { background: var(--good); }
+.fail .meter-fill { background: var(--bad); }
+.meter-mark { position: absolute; top: -5px; width: 3px; height: 24px; background: var(--text); border-radius: 2px; }
+
+.review-title { font-weight: 600; margin: 1.2rem 0 .5rem; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-bottom: 1.4rem; }
+.chip {
+  min-width: 2.4rem; padding: .3rem .6rem; border-radius: 10px; text-align: center; text-decoration: none;
+  background: var(--bad-soft); color: var(--bad); font-weight: 700;
+}
+.chip:hover { background: var(--bad); color: #fff; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 600px) {
+  .hero { padding: 1.8rem 1.3rem; }
+  .hero h1 { font-size: 1.7rem; }
+  .stats { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .question { padding: 1rem; }
+}

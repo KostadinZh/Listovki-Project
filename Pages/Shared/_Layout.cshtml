@@ -1,19 +1,28 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Listovki Quiz</title>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav>
-            <a class="brand" asp-page="/Index">Listovki Quiz</a>
-        </nav>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" asp-page="/Index">
+                <span class="logo-mark">B</span>
+                <span class="logo-text">Listovki Quiz</span>
+            </a>
+        </div>
     </header>
-    <main>
+
+    <main class="container">
         @RenderBody()
     </main>
+
+    <footer class="site-footer">
+        <div class="container">Listovki Quiz &middot; driving theory practice</div>
+    </footer>
 </body>
 </html>
