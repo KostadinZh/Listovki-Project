@@ -1,24 +1,44 @@
 @page
 @model QuizModel
-@{ ViewData["Title"] = Model.Submitted ? "Results" : "Exam"; }
+@{ ViewData["Title"] = Model.Submitted ? "Results" : (Model.IsShortTest ? "Short test" : "Exam"); }
+
+<h1>@(Model.IsShortTest ? "Short test" : "Full exam")</h1>
+@if (Model.IsShortTest)
+{
+    <p class="muted">@Model.Questions.Count random questions from all topics &middot; no pass mark, just practice</p>
+}
+else
+{
+    <p class="muted">@ExamRules.QuestionCount questions &middot; @ExamRules.TotalPoints points &middot; pass mark @ExamRules.PassPoints</p>
+}
 
 @if (Model.Submitted)
 {
-    <section class="result @(Model.Passed ? "pass" : "fail")">
-        <span class="result-badge">@(Model.Passed ? "Passed" : "Not passed")</span>
+    <section class="result @(Model.IsShortTest ? "short" : (Model.Passed ? "pass" : "fail"))">
+        <span class="result-badge">@(Model.IsShortTest ? "Short test" : (Model.Passed ? "Passed" : "Not passed"))</span>
 
         <p class="score">
             <span class="score-number">@Model.PointsEarned</span>
-            <span class="score-total">/ @ExamRules.TotalPoints points</span>
+            <span class="score-total">/ @Model.TotalPoints points</span>
         </p>
 
         <div class="meter">
             <div class="meter-fill" style="width: @(Model.ScorePercent)%"></div>
-            <div class="meter-mark" style="left: @(Model.PassPercent)%"></div>
+            @if (!Model.IsShortTest)
+            {
+                <div class="meter-mark" style="left: @(Model.PassPercent)%"></div>
+            }
         </div>
-        <p class="muted">The line marks the pass mark: @ExamRules.PassPoints points.</p>
+        @if (Model.IsShortTest)
+        {
+            <p class="muted">Short tests have no pass mark.</p>
+        }
+        else
+        {
+            <p class="muted">The line marks the pass mark: @ExamRules.PassPoints points.</p>
+        }
 
-        <p>@Model.CorrectCount of @ExamRules.QuestionCount questions were answered correctly.</p>
+        <p>@Model.CorrectCount of @Model.Questions.Count questions were answered correctly.</p>
 
         @if (Model.WrongNumbers.Count > 0)
         {
@@ -36,14 +56,21 @@
         }
 
         <p class="muted">This attempt was saved to your account.</p>
-        <a class="button" asp-page="Quiz">Take a new exam</a>
+        @if (Model.IsShortTest)
+        {
+            <a class="button" asp-page="Quiz" asp-route-size="@Model.Questions.Count">Another short test</a>
+        }
+        else
+        {
+            <a class="button" asp-page="Quiz">Take a new exam</a>
+        }
         <a class="button secondary" asp-page="History">My attempts</a>
     </section>
 }
 else
 {
     <div class="progress-wrap">
-        <p class="progress-text"><strong id="answered">0</strong> of @ExamRules.QuestionCount questions answered</p>
+        <p class="progress-text"><strong id="answered">0</strong> of @Model.Questions.Count questions answered</p>
         <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
 }
@@ -94,7 +121,7 @@ else
                     var imageUrl = question.AnswerImageUrl(i);
                     var isPicked = picked.Contains(i);
 
-                    // After the exam, colour the answers: green = correct, red = ticked but wrong
+                    // After the test, colour the answers: green = correct, red = ticked but wrong
                     var optionClass = "option";
                     if (Model.Submitted && answer.IsCorrect)
                     {

@@ -12,6 +12,10 @@ Then open http://localhost:5000
 - Questions with a video are never used
 - A question gives its points only if exactly the correct answers are ticked
 
+## Short tests
+- `/Quiz?size=5` and `/Quiz?size=10` give 5 or 10 random questions from all topics (sizes are in `ExamRules.ShortTestSizes`)
+- No pass mark; they are saved in a separate "Short tests" table in My attempts and do not change the exam statistics
+
 ## Accounts
 - People register with a username and password, then log in (`/Register`, `/Login`)
 - The exam needs a login. Every finished exam is saved and listed on `/History` ("My attempts")

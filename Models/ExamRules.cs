@@ -22,6 +22,9 @@ public static class ExamRules
     public const int TotalPoints = 97;
     public const int PassPoints = 87;
 
+    // The sizes of the short tests (just for practice, no pass mark)
+    public static readonly List<int> ShortTestSizes = new List<int> { 5, 10 };
+
     // The recipe for one exam. The lines must add up to 45 questions and 97 points
     // (the program checks this when it starts).
     public static readonly List<ExamPart> Parts = new List<ExamPart>

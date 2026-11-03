@@ -42,6 +42,20 @@
     </div>
 </section>
 
+<h2 class="section-title">Short tests</h2>
+<section class="card">
+    <p class="short-text">
+        Want to practise a little? Take a short test with a few random questions from all topics.
+        Short tests have no pass mark and are listed separately in My attempts.
+    </p>
+    <div class="hero-actions">
+        @foreach (var size in ExamRules.ShortTestSizes)
+        {
+            <a class="button secondary" asp-page="Quiz" asp-route-size="@size">@size questions</a>
+        }
+    </div>
+</section>
+
 <h2 class="section-title">How it works</h2>
 <section class="steps">
     <div class="step">

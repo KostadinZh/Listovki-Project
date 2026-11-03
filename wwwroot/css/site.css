@@ -285,3 +285,8 @@ img.missing { min-width: 120px; min-height: 60px; padding: .4rem; border: 2px da
   .stats-4 { grid-template-columns: repeat(2, 1fr); }
   .auth-card { padding: 1.5rem 1.2rem; }
 }
+
+/* ---------- Short tests ---------- */
+.short-text { margin: 0 0 1rem; }
+.result.short { border-top-color: var(--accent); }
+.short .result-badge { background: var(--accent-text); }

@@ -4,62 +4,107 @@
 
 <h1>My attempts</h1>
 
-@if (Model.Attempts.Count == 0)
+@if (Model.Exams.Count == 0 && Model.ShortTests.Count == 0)
 {
     <section class="card empty">
-        <p>You have not taken an exam yet.</p>
+        <p>You have not taken a test yet.</p>
         <a class="button" asp-page="Quiz">Take your first exam</a>
     </section>
 }
 else
 {
-    <section class="stats stats-4">
-        <div class="stat">
-            <span class="stat-number">@Model.Attempts.Count</span>
-            <span class="stat-label">attempts</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">@Model.BestPoints</span>
-            <span class="stat-label">best score</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">@Model.AveragePoints</span>
-            <span class="stat-label">average score</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">@Model.PassedCount</span>
-            <span class="stat-label">passed</span>
-        </div>
-    </section>
+    <h2 class="section-title">Full exams</h2>
 
-    <div class="table-wrap">
-        <table class="attempts">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Points</th>
-                    <th>Correct</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var attempt in Model.Attempts)
-                {
+    @if (Model.Exams.Count == 0)
+    {
+        <p class="muted">No full exams yet. <a asp-page="Quiz">Take one</a></p>
+    }
+    else
+    {
+        <section class="stats stats-4">
+            <div class="stat">
+                <span class="stat-number">@Model.Exams.Count</span>
+                <span class="stat-label">exams</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">@Model.BestPoints</span>
+                <span class="stat-label">best score</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">@Model.AveragePoints</span>
+                <span class="stat-label">average score</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">@Model.PassedCount</span>
+                <span class="stat-label">passed</span>
+            </div>
+        </section>
+
+        <div class="table-wrap">
+            <table class="attempts">
+                <thead>
                     <tr>
-                        <td>@(attempt.TakenAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</td>
-                        <td>
-                            <strong>@attempt.Points</strong> / @ExamRules.TotalPoints
-                            <div class="mini-bar"><div class="mini-fill" style="width: @(attempt.Points * 100 / ExamRules.TotalPoints)%"></div></div>
-                        </td>
-                        <td>@attempt.CorrectCount / @ExamRules.QuestionCount</td>
-                        <td>
-                            <span class="tag @(attempt.Passed ? "tag-pass" : "tag-fail")">@(attempt.Passed ? "Passed" : "Failed")</span>
-                        </td>
+                        <th>Date</th>
+                        <th>Points</th>
+                        <th>Correct</th>
+                        <th>Result</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var attempt in Model.Exams)
+                    {
+                        <tr>
+                            <td>@(attempt.TakenAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</td>
+                            <td>
+                                <strong>@attempt.Points</strong> / @ExamRules.TotalPoints
+                                <div class="mini-bar"><div class="mini-fill" style="width: @(attempt.Points * 100 / ExamRules.TotalPoints)%"></div></div>
+                            </td>
+                            <td>@attempt.CorrectCount / @ExamRules.QuestionCount</td>
+                            <td>
+                                <span class="tag @(attempt.Passed ? "tag-pass" : "tag-fail")">@(attempt.Passed ? "Passed" : "Failed")</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
-    <p class="center"><a class="button" asp-page="Quiz">Take another exam</a></p>
+    <h2 class="section-title">Short tests</h2>
+
+    @if (Model.ShortTests.Count == 0)
+    {
+        <p class="muted">No short tests yet. You can start one from the <a asp-page="Index">home page</a>.</p>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="attempts">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Test</th>
+                        <th>Correct</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var attempt in Model.ShortTests)
+                    {
+                        <tr>
+                            <td>@(attempt.TakenAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"))</td>
+                            <td>@attempt.QuestionCount questions</td>
+                            <td>
+                                <strong>@attempt.CorrectCount</strong> / @attempt.QuestionCount
+                                <div class="mini-bar"><div class="mini-fill" style="width: @(attempt.QuestionCount == 0 ? 0 : attempt.CorrectCount * 100 / attempt.QuestionCount)%"></div></div>
+                            </td>
+                            <td>@attempt.Points / @attempt.TotalPoints</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <p class="center"><a class="button" asp-page="Quiz">Take a full exam</a></p>
 }

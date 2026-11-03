@@ -51,6 +51,14 @@ public class QuestionRepository
         return mixed.ToList();
     }
 
+    /// <summary>A short test: random questions from all sections. Any number of points.</summary>
+    public List<Question> BuildShortTest(int count)
+    {
+        Question[] all = _questions.ToArray();
+        Random.Shared.Shuffle(all);               // mix them like a deck of cards
+        return all.Take(count).ToList();          // take the first ones
+    }
+
     /// <summary>Finds the questions with the given ids, in the same order. Unknown ids are skipped.</summary>
     public List<Question> GetByIds(List<int> ids)
     {
